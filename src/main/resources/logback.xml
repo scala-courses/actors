@@ -5,6 +5,7 @@
         </encoder>
     </appender>
 
+    <logger name="akka.actor.CoordinatedShutdown" level="INFO" />
     <logger name="akka.actor" level="DEBUG" />
 
     <root level="INFO">

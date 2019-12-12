@@ -1,12 +1,15 @@
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+package old
+
+import akka.actor.{Actor, Props}
+import akka.pattern.ask
 import akka.util.Timeout
 
-import scala.concurrent.{Await, Future, Promise}
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 object M_03_ask {
-  def main(args: Array[String]): Unit = {
-    val system = ActorSystem("system")
+  def main(args: Array[String]): Unit = withActorSystem("system"){ system =>
+
 
     object Counter {
       sealed trait Message
@@ -27,13 +30,6 @@ object M_03_ask {
       }
     }
 
-
-
-
-
-
-
-
     val counter = system.actorOf(Props(new Counter), "counter")
 
     counter ! Inc(5)
@@ -41,14 +37,14 @@ object M_03_ask {
     counter ! Inc()
     counter ! Inc()
 
-    import akka.pattern.ask
-    implicit val timeout: Timeout = 1.second
+    implicit val timeout: Timeout = 1.minute
 
-    val result: Future[Count] = (counter ? Get).mapTo[Count]
+    val result = counter ? Get
 
-    println(s"Result: ${Await.result(result, 1.second)}")
+    result.foreach(r => println(s"Result: $r"))
 
-    Await.result(system.terminate(), 1.minute)
+
+    Thread.sleep(1000)
 
   }
 }

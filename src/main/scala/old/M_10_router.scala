@@ -1,3 +1,5 @@
+package old
+
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.pattern.ask
 import akka.routing.FromConfig

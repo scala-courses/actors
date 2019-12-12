@@ -1,16 +1,17 @@
-import akka.actor.SupervisorStrategy.{Escalate, Restart, Resume, Stop}
-import akka.actor.{Actor, ActorRef, ActorSystem, FSM, OneForOneStrategy, Props, Stash, SupervisorStrategy}
-import akka.pattern.{BackoffSupervisor, after, ask, pipe}
+package old
+
+import akka.actor.SupervisorStrategy.{Escalate, Restart, Resume}
+import akka.actor.{Actor, ActorRef, ActorSystem, OneForOneStrategy, Props, SupervisorStrategy}
+import akka.pattern.ask
 import akka.util.Timeout
 
+import scala.concurrent.Await
 import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
 
 object M_09_actor_selection {
   def main(args: Array[String]): Unit = {
 
     val system = ActorSystem("system")
-    import system.dispatcher
 
     object ServiceManager {
       sealed trait Message

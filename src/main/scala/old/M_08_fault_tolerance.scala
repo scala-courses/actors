@@ -1,16 +1,19 @@
+package old
+
 import akka.actor.SupervisorStrategy.{Escalate, Restart, Resume, Stop}
-import akka.actor.{Actor, ActorSystem, Cancellable, FSM, OneForOneStrategy, Props, Stash, SupervisorStrategy}
+import akka.actor.{ActorSystem, FSM, OneForOneStrategy, Props, Stash, SupervisorStrategy}
 import akka.pattern.{BackoffSupervisor, after, ask, pipe}
 import akka.util.Timeout
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
+
 
 object M_08_fault_tolerance {
   def main(args: Array[String]): Unit = {
 
     val system = ActorSystem("system")
-    import system.dispatcher
 
     def getToken(): Future[String] =
       after(100.millis, system.scheduler)(Future.successful(s"token ${util.Random.nextInt()}"))

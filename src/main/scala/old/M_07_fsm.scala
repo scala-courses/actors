@@ -1,14 +1,19 @@
-import akka.actor.{Actor, ActorLogging, ActorSystem, Cancellable, FSM, Props, Scheduler, Stash}
-import akka.pattern.{after, ask, pipe}
-import akka.util.Timeout
+package old
 
-import scala.concurrent.duration._
+import akka.actor.{ActorLogging, ActorSystem, FSM, Props, Stash}
+import akka.util.Timeout
+import akka.pattern.after
+import akka.pattern.pipe
+import akka.pattern.ask
+
 import scala.concurrent.{Await, Future}
+import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
+
 
 object M_07_fsm {
   def main(args: Array[String]): Unit = {
     val system = ActorSystem("system")
-    import system.dispatcher
 
     def getToken(): Future[String] =
       after(100.millis, system.scheduler)(Future.successful(s"token ${util.Random.nextInt}"))

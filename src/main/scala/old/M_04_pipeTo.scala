@@ -1,14 +1,16 @@
-import akka.actor.{Actor, ActorSystem, Props}
+package old
 
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration._
-import akka.pattern.ask
+import akka.actor.{Actor, Props}
+import akka.pattern.{ask, pipe}
 import akka.util.Timeout
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
+
 object M_04_pipeTo {
-  def main(args: Array[String]): Unit = {
-    val system = ActorSystem("system")
-    import system.dispatcher
+  def main(args: Array[String]): Unit = withActorSystem("system"){system =>
+
 
     object Service {
       sealed trait Message
@@ -29,17 +31,11 @@ object M_04_pipeTo {
         case Get =>
 //          val replyTo = sender()
 //          asyncAction().foreach(res => replyTo ! res)
-          import akka.pattern.pipe
+
+
           asyncAction().pipeTo(sender())
       }
     }
-
-
-
-
-
-
-
 
     val service = system.actorOf(Props(new Service), "service")
 
@@ -50,8 +46,5 @@ object M_04_pipeTo {
     result.foreach(r => println(s"Result: $r"))
 
     Await.result(result, 1.minute)
-
-    Await.result(system.terminate(), 1.minute)
-
   }
 }
